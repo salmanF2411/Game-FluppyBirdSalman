@@ -26,7 +26,7 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-  width: 102%;
+  width: 102%; /* Menggunakan 100% agar pas dengan lebar canvas */
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
   display: flex;
@@ -36,7 +36,7 @@ canvas {
   color: white;
   text-align: center;
   z-index: 20;
-  border-radius: 8px;
+  border-radius: 4px; /* Menyesuaikan sudut canvas */
 }
 
 h1 {
@@ -44,6 +44,7 @@ h1 {
   margin-bottom: 40px;
   color: #e3c505;
 }
+
 h2 {
   font-size: 16px;
   margin-bottom: 20px;
@@ -108,7 +109,7 @@ button:hover {
   height: 75px;
   border-radius: 50%;
   z-index: 5;
-  display: none; /* Hanya muncul di Mobile */
+  display: none;
 }
 
 @media (max-width: 768px) {

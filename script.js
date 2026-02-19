@@ -30,13 +30,22 @@ const bgm = document.getElementById("backgroundMusic");
 const soundFly = document.getElementById("soundFly");
 const soundScore = document.getElementById("soundScore");
 const soundDie = document.getElementById("soundDie");
+const soundMenu = document.getElementById("soundMenu");
 
 bgm.volume = 0.3;
+
+// Fungsi untuk suara interaksi menu
+function playMenuSound() {
+  if (soundMenu) {
+    soundMenu.currentTime = 0;
+    soundMenu.play();
+  }
+}
 
 /* ======================
    GAME STATE
 ====================== */
-let gameActive = false; // Membedakan antara Menu dan Gameplay
+let gameActive = false;
 let gameOver = false;
 let score = 0;
 let frame = 0;
@@ -59,25 +68,25 @@ const pipeSpeed = 2;
    NAVIGATION LOGIC
 ====================== */
 function showScreen(screenId) {
-  // Sembunyikan semua overlay menu
+  playMenuSound();
   document
     .querySelectorAll(".overlay")
     .forEach((el) => el.classList.add("hidden"));
-  // Tampilkan screen yang diinginkan
   document.getElementById(screenId).classList.remove("hidden");
 }
 
 function selectBird(index) {
+  playMenuSound();
   currentSkinIndex = index;
   birdImg.src = birdSkins[index];
 
-  // Highlight karakter yang dipilih
   document.querySelectorAll(".char-opt").forEach((img, i) => {
     img.classList.toggle("selected", i === index);
   });
 }
 
 function startGame() {
+  playMenuSound();
   document.getElementById("mainMenu").classList.add("hidden");
   gameActive = true;
   gameOver = false;
@@ -86,6 +95,7 @@ function startGame() {
 }
 
 function backToMenu() {
+  playMenuSound();
   gameActive = false;
   gameOver = false;
   document.getElementById("gameOverPopup").classList.add("hidden");
@@ -139,13 +149,11 @@ function update() {
 
   pipes.forEach((pipe) => {
     pipe.x -= pipeSpeed;
-    // Cek poin
     if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
       score++;
       pipe.passed = true;
       soundScore.play();
     }
-    // Cek tabrakan
     if (
       bird.x < pipe.x + pipeWidth &&
       bird.x + bird.width > pipe.x &&
@@ -160,10 +168,8 @@ function update() {
 }
 
 function draw() {
-  // Draw Background
   ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
 
-  // Draw Pipes
   pipes.forEach((pipe) => {
     ctx.save();
     ctx.translate(pipe.x + pipeWidth / 2, pipe.top / 2);
@@ -179,10 +185,8 @@ function draw() {
     );
   });
 
-  // Draw Selected Bird
   ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
-  // UI Score (Hanya muncul saat main)
   if (gameActive) {
     ctx.save();
     ctx.fillStyle = "#e3c505";
@@ -213,11 +217,12 @@ function resetGameStats() {
 }
 
 document.getElementById("retryBtn").addEventListener("click", () => {
+  playMenuSound();
   document.getElementById("gameOverPopup").classList.add("hidden");
   startGame();
 });
 
-// Inisialisasi awal
+// Inisialisasi awal skin terpilih
 selectBird(0);
 
 function gameLoop() {
