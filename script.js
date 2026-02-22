@@ -152,6 +152,9 @@ function startGame() {
   document.getElementById("mainMenu").classList.add("hidden");
   resizeCanvas();
 
+  // Tampilkan tombol JUMP saat game dimulai
+  document.getElementById("jumpBtnMobile").style.display = "block";
+
   gameActive = true;
   gameOver = false;
   lastCycleTime = Date.now();
@@ -171,6 +174,9 @@ function backToMenu() {
   gameOver = false;
 
   bgm.pause(); // Matikan musik gameplay
+
+  // Sembunyikan tombol JUMP saat kembali ke menu
+  document.getElementById("jumpBtnMobile").style.display = "none";
 
   document.getElementById("gameOverPopup").classList.add("hidden");
 
@@ -424,7 +430,7 @@ document.getElementById("retryBtn").addEventListener("click", () => {
   playMenuSound();
 
   document.getElementById("gameOverPopup").classList.add("hidden");
-  
+
   startGame();
 });
 

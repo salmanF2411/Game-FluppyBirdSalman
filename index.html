@@ -22,7 +22,8 @@
         <h1>FLAPPY BIRD</h1>
         <button onclick="startGame()">START</button>
         <button onclick="showScreen('charSelect')">PILIH KARAKTER</button>
-        <button onclick="showScreen('gameDesc')">MENU PENJELASAN</button>
+        <button onclick="showScreen('charSelect')">PILIH MAP</button>
+        <button onclick="showScreen('gameDesc')">PENJELASAN</button>
         <button onclick="showScreen('optionsMenu')">OPTIONS</button>
       </div>
 
@@ -66,7 +67,7 @@
       <div id="optionsMenu" class="overlay hidden">
         <h2>OPTIONS</h2>
         <div class="options-content">
-          <p>MUSIK: <span id="musicStatusText">ON</span></p>
+          <p>MUSIK: <span id="musicStatusText">OFF</span></p>
           <button onclick="toggleMusic()">ON / OFF</button>
         </div>
         <br />

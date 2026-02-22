@@ -238,10 +238,6 @@ button:active {
 
 /* Mobile only */
 @media (max-width: 768px) {
-  #jumpBtnMobile {
-    display: block;
-  }
-
   /* Animasi khusus saat ditekan di mobile agar terasa tactile */
   #jumpBtnMobile:active {
     transform: translateY(4px) scale(0.95);
