@@ -22,7 +22,7 @@
         <h1>FLAPPY BIRD</h1>
         <button onclick="startGame()">START</button>
         <button onclick="showScreen('charSelect')">PILIH KARAKTER</button>
-        <button onclick="showScreen('charSelect')">PILIH MAP</button>
+        <button onclick="showScreen('mapSelect')">PILIH MAP</button>
         <button onclick="showScreen('gameDesc')">PENJELASAN</button>
         <button onclick="showScreen('optionsMenu')">OPTIONS</button>
       </div>
@@ -74,6 +74,58 @@
               id="opt4"
             />
             <p class="char-price" id="price4">500</p>
+          </div>
+          <div class="char-item">
+            <img
+              src="assets/g6.png"
+              onclick="selectBird(5)"
+              class="char-opt"
+              id="opt5"
+            />
+            <p class="char-price" id="price5">750</p>
+          </div>
+        </div>
+        <button onclick="showScreen('mainMenu')">KEMBALI</button>
+      </div>
+
+      <div id="mapSelect" class="overlay hidden">
+        <h2>PILIH MAP</h2>
+        <div class="char-list">
+          <div class="char-item">
+            <img
+              src="assets/background.png"
+              onclick="selectMap(0)"
+              class="char-opt"
+              id="mapOpt0"
+            />
+            <p class="char-price" id="mapPrice0">FREE</p>
+          </div>
+          <div class="char-item">
+            <img
+              src="assets/map1.jpg"
+              onclick="selectMap(1)"
+              class="char-opt"
+              id="mapOpt1"
+            />
+            <p class="char-price" id="mapPrice1">150</p>
+          </div>
+          <div class="char-item">
+            <img
+              src="assets/map2.jpg"
+              onclick="selectMap(2)"
+              class="char-opt"
+              id="mapOpt2"
+            />
+            <p class="char-price" id="mapPrice2">300</p>
+          </div>
+          <div class="char-item">
+            <img
+              src="assets/map3.jpg"
+              onclick="selectMap(3)"
+              class="char-opt"
+              id="mapOpt3"
+            />
+            <p class="char-price" id="mapPrice3">500</p>
           </div>
         </div>
         <button onclick="showScreen('mainMenu')">KEMBALI</button>
