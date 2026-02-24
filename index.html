@@ -131,6 +131,48 @@
         <button onclick="showScreen('mainMenu')">KEMBALI</button>
       </div>
 
+      <div id="confirmPopup" class="overlay hidden" style="z-index: 100">
+        <div class="popup">
+          <h2 id="confirmTitle">BELI?</h2>
+          <img
+            id="confirmImg"
+            src=""
+            style="
+              width: 80px;
+              height: auto;
+              margin-bottom: 15px;
+              border-radius: 10px;
+            "
+          />
+          <p id="confirmPriceText">Harga: 0 Koin</p>
+          <div class="popup-buttons">
+            <button id="confirmBuyBtn">BUY</button>
+            <button onclick="closeConfirm()">CANCEL</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="errorPopup" class="overlay hidden" style="z-index: 110">
+        <div class="popup" style="border: 4px solid #ff4d4d">
+          <h2 style="color: #ff4d4d; margin-top: 10px">WADUH!</h2>
+          <p style="font-size: 12px; line-height: 1.5">
+            Koin kamu tidak cukup untuk membeli ini.
+          </p>
+          <div class="popup-buttons">
+            <button
+              onclick="closeError()"
+              style="
+                background: linear-gradient(145deg, #ff4d4d, #cc0000);
+                color: white;
+                box-shadow: 0 6px 0 #800000;
+              "
+            >
+              OKE
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div id="optionsMenu" class="overlay hidden">
         <h2>OPTIONS</h2>
         <div class="options-content">
@@ -173,6 +215,7 @@
     <audio id="soundDie" src="assets/die.mp3"></audio>
     <audio id="soundMenu" src="assets/menu.mp3"></audio>
     <audio id="soundCoin" src="assets/koin.mp3"></audio>
+    <audio id="soundBuy" src="assets/buy.mp3"></audio>
 
     <script src="script.js"></script>
   </body>

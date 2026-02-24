@@ -51,9 +51,11 @@ const soundScore = document.getElementById("soundScore");
 const soundDie = document.getElementById("soundDie");
 const soundMenu = document.getElementById("soundMenu");
 const soundCoin = document.getElementById("soundCoin");
+const soundBuy = document.getElementById("soundBuy");
 
 bgm.volume = 0.3;
 soundMenuBg.volume = 0.4;
+soundBuy.volume = 0.6;
 
 /* OPTIONS & MUSIC STATE */
 let isMusicOn = localStorage.getItem("musicSetting") === "off" ? false : true;
@@ -120,7 +122,6 @@ const coinSize = 26;
 document.getElementById("totalKoinMenu").innerText = totalKoinSaved;
 
 /* NAVIGATION & UI LOGIC */
-
 function playMenuSound() {
   soundMenu.currentTime = 0;
   soundMenu.play();
@@ -143,9 +144,7 @@ function updateCharUI() {
     const img = document.getElementById(`opt${index}`);
     const priceText = document.getElementById(`price${index}`);
     if (!img || !priceText) return;
-
     img.classList.toggle("selected", currentSkinIndex === index);
-
     if (unlockedSkins[index]) {
       priceText.innerText = currentSkinIndex === index ? "DIPAKAI" : "";
       priceText.style.color = "#00ff00";
@@ -163,9 +162,7 @@ function updateMapUI() {
     const img = document.getElementById(`mapOpt${index}`);
     const priceText = document.getElementById(`mapPrice${index}`);
     if (!img || !priceText) return;
-
     img.classList.toggle("selected", currentMapIndex === index);
-
     if (unlockedMaps[index]) {
       priceText.innerText = currentMapIndex === index ? "DIPAKAI" : "";
       priceText.style.color = "#00ff00";
@@ -178,43 +175,59 @@ function updateMapUI() {
   });
 }
 
-/* PERBAIKAN BUG PILIH MAP */
+/* POPUP LOGIC */
+function closeConfirm() {
+  playMenuSound();
+  document.getElementById("confirmPopup").classList.add("hidden");
+}
+
+function closeError() {
+  playMenuSound();
+  document.getElementById("errorPopup").classList.add("hidden");
+}
+
+/* PERBAIKAN BUG PILIH MAP + ERROR POPUP */
 function selectMap(index) {
   if (unlockedMaps[index]) {
     playMenuSound();
     currentMapIndex = index;
     bgImg.src = mapSkins[index];
-
-    // Matikan efek malam seketika saat map diganti
     bgAlpha = 0;
     isNight = false;
-    lastCycleTime = Date.now(); // Reset timer siklus agar tidak langsung berubah lagi
-
+    lastCycleTime = Date.now();
     localStorage.setItem("currentMapIndex", index);
+    updateMapUI();
   } else {
-    if (totalKoinSaved >= mapPrices[index]) {
-      totalKoinSaved -= mapPrices[index];
-      unlockedMaps[index] = true;
-      localStorage.setItem("totalKoin", totalKoinSaved);
-      localStorage.setItem("unlockedMaps", JSON.stringify(unlockedMaps));
-      document.getElementById("totalKoinMenu").innerText = totalKoinSaved;
-      soundCoin.currentTime = 0;
-      soundCoin.play();
+    playMenuSound();
+    document.getElementById("confirmTitle").innerText = "BELI MAP?";
+    document.getElementById("confirmImg").src = mapSkins[index];
+    document.getElementById("confirmPriceText").innerText =
+      "Harga: " + mapPrices[index] + " Koin";
+    document.getElementById("confirmPopup").classList.remove("hidden");
 
-      currentMapIndex = index;
-      bgImg.src = mapSkins[index];
-
-      // Matikan efek malam seketika saat map baru dibeli dan terpilih
-      bgAlpha = 0;
-      isNight = false;
-      lastCycleTime = Date.now();
-
-      localStorage.setItem("currentMapIndex", index);
-    } else {
-      alert("Koin tidak cukup!");
-    }
+    document.getElementById("confirmBuyBtn").onclick = function () {
+      if (totalKoinSaved >= mapPrices[index]) {
+        totalKoinSaved -= mapPrices[index];
+        unlockedMaps[index] = true;
+        localStorage.setItem("totalKoin", totalKoinSaved);
+        localStorage.setItem("unlockedMaps", JSON.stringify(unlockedMaps));
+        document.getElementById("totalKoinMenu").innerText = totalKoinSaved;
+        soundBuy.currentTime = 0;
+        soundBuy.play();
+        currentMapIndex = index;
+        bgImg.src = mapSkins[index];
+        bgAlpha = 0;
+        isNight = false;
+        lastCycleTime = Date.now();
+        localStorage.setItem("currentMapIndex", index);
+        closeConfirm();
+        updateMapUI();
+      } else {
+        closeConfirm();
+        document.getElementById("errorPopup").classList.remove("hidden");
+      }
+    };
   }
-  updateMapUI();
 }
 
 function selectBird(index) {
@@ -222,22 +235,34 @@ function selectBird(index) {
     playMenuSound();
     currentSkinIndex = index;
     birdImg.src = birdSkins[index];
+    updateCharUI();
   } else {
-    if (totalKoinSaved >= skinPrices[index]) {
-      totalKoinSaved -= skinPrices[index];
-      unlockedSkins[index] = true;
-      localStorage.setItem("totalKoin", totalKoinSaved);
-      localStorage.setItem("unlockedSkins", JSON.stringify(unlockedSkins));
-      document.getElementById("totalKoinMenu").innerText = totalKoinSaved;
-      soundCoin.currentTime = 0;
-      soundCoin.play();
-      currentSkinIndex = index;
-      birdImg.src = birdSkins[index];
-    } else {
-      alert("Koin tidak cukup!");
-    }
+    playMenuSound();
+    document.getElementById("confirmTitle").innerText = "BELI KARAKTER?";
+    document.getElementById("confirmImg").src = birdSkins[index];
+    document.getElementById("confirmPriceText").innerText =
+      "Harga: " + skinPrices[index] + " Koin";
+    document.getElementById("confirmPopup").classList.remove("hidden");
+
+    document.getElementById("confirmBuyBtn").onclick = function () {
+      if (totalKoinSaved >= skinPrices[index]) {
+        totalKoinSaved -= skinPrices[index];
+        unlockedSkins[index] = true;
+        localStorage.setItem("totalKoin", totalKoinSaved);
+        localStorage.setItem("unlockedSkins", JSON.stringify(unlockedSkins));
+        document.getElementById("totalKoinMenu").innerText = totalKoinSaved;
+        soundBuy.currentTime = 0;
+        soundBuy.play();
+        currentSkinIndex = index;
+        birdImg.src = birdSkins[index];
+        closeConfirm();
+        updateCharUI();
+      } else {
+        closeConfirm();
+        document.getElementById("errorPopup").classList.remove("hidden");
+      }
+    };
   }
-  updateCharUI();
 }
 
 function toggleMusic() {
@@ -260,19 +285,16 @@ function startGame() {
   soundMenuBg.pause();
   document.getElementById("mainMenu").classList.add("hidden");
   resizeCanvas();
-
   if (window.innerWidth <= 768) {
     document.getElementById("jumpBtnMobile").style.display = "block";
   } else {
     document.getElementById("jumpBtnMobile").style.display = "none";
   }
-
   gameActive = true;
   gameOver = false;
   lastCycleTime = Date.now();
   lastFrameTime = Date.now();
   resetGameStats();
-
   if (isMusicOn) {
     bgm.currentTime = 0;
     bgm.play().catch(() => {});
@@ -290,7 +312,6 @@ function backToMenu() {
   showScreen("mainMenu");
 }
 
-/* CONTROL */
 function control() {
   if (!gameActive || gameOver) return;
   bird.speed = bird.jump;
@@ -319,7 +340,6 @@ document.getElementById("jumpBtnMobile").addEventListener("touchstart", (e) => {
   control();
 });
 
-/* SPAWN PIPA & KOIN */
 function spawnCoin(pipeX, gapTop, gapBottom) {
   if (Math.random() > 0.6) return;
   let centerGap = gapTop + (gapBottom - gapTop) / 2;
@@ -337,25 +357,20 @@ function createPipe() {
   let minH = 50;
   let maxH = canvas.height - pipeGap - minH;
   let topH = Math.floor(Math.random() * (maxH - minH) + minH);
-
   pipes.push({
     x: canvas.width,
     top: topH,
     bottom: canvas.height - topH - pipeGap,
     passed: false,
   });
-
   spawnCoin(canvas.width, topH, topH + pipeGap);
 }
 
 function update() {
   if (!gameActive || gameOver) return;
-
   let now = Date.now();
   let deltaTime = (now - lastFrameTime) / 1000;
   lastFrameTime = now;
-
-  // Hanya map 0 yang bisa berubah malam
   if (currentMapIndex === 0) {
     if (!isNight && now - lastCycleTime >= DAY_DURATION) {
       isNight = true;
@@ -364,7 +379,6 @@ function update() {
       isNight = false;
       lastCycleTime = now;
     }
-
     if (isNight) {
       bgAlpha += transitionSpeed * deltaTime;
       if (bgAlpha > 1) bgAlpha = 1;
@@ -375,14 +389,10 @@ function update() {
   } else {
     bgAlpha = 0;
   }
-
   bird.speed += bird.gravity;
   bird.y += bird.speed;
-
   if (bird.y < 0 || bird.y + bird.height > canvas.height) endGame();
-
   if (frame % 100 === 0) createPipe();
-
   pipes.forEach((pipe) => {
     pipe.x -= pipeSpeed;
     if (!pipe.passed && pipe.x + pipeWidth < bird.x) {
@@ -404,12 +414,10 @@ function update() {
       endGame();
     }
   });
-
   coins.forEach((coin) => {
     coin.x -= pipeSpeed;
     coin.angle += 0.1;
     coin.scale = Math.sin(coin.angle) * 0.3 + 0.7;
-
     if (
       !coin.collected &&
       bird.x < coin.x + coinSize &&
@@ -425,7 +433,6 @@ function update() {
       soundCoin.play();
     }
   });
-
   pipes = pipes.filter((p) => p.x + pipeWidth > 0);
   coins = coins.filter((c) => !c.collected && c.x + coinSize > 0);
   frame++;
@@ -434,13 +441,11 @@ function update() {
 function draw() {
   ctx.globalAlpha = 1;
   ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-
   if (bgAlpha > 0) {
     ctx.globalAlpha = bgAlpha;
     ctx.drawImage(nightBgImg, 0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = 1;
   }
-
   pipes.forEach((pipe) => {
     ctx.save();
     ctx.translate(pipe.x + pipeWidth / 2, pipe.top / 2);
@@ -455,7 +460,6 @@ function draw() {
       pipe.bottom,
     );
   });
-
   coins.forEach((coin) => {
     ctx.save();
     ctx.translate(coin.x + coinSize / 2, coin.y + coinSize / 2);
@@ -463,9 +467,7 @@ function draw() {
     ctx.drawImage(coinImg, -coinSize / 2, -coinSize / 2, coinSize, coinSize);
     ctx.restore();
   });
-
   ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-
   if (gameActive) {
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 4;
